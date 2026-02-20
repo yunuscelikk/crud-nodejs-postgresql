@@ -9,7 +9,7 @@ const createPost = async (req, res) => {
         error: "Title and content are required",
       });
     }
-    
+
     const post = await Post.create({
       title,
       content,
@@ -22,4 +22,27 @@ const createPost = async (req, res) => {
   }
 };
 
-module.exports = { createPost };
+const deletePost = async (req,res) => {
+    const { id } = req.params;
+
+    try {
+        const post = await Post.findOne({
+            where: {
+                id,
+            },
+        });
+
+        if (!post) {
+            return res.status(404).json({ error: "Post not found"});
+        }
+
+        await post.destroy();
+
+        res.status(200).json(post)
+
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({error: "Post deletion failed"});
+    }
+}
+module.exports = { createPost, deletePost };
