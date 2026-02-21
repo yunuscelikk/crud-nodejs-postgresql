@@ -45,4 +45,18 @@ const deletePost = async (req,res) => {
         res.status(500).json({error: "Post deletion failed"});
     }
 }
-module.exports = { createPost, deletePost };
+
+const getAllPosts = async (req, res) => {
+    try {
+        const posts = await Post.findAll({
+            order: [["createdAt", "ASC"]],
+        });
+
+        res.status(200).json(posts);
+        
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({error: "Posts cant fetch"});
+    }
+}
+module.exports = { createPost, deletePost, getAllPosts };
